@@ -40,5 +40,10 @@
     "noUncheckedSideEffectImports": true,
     "moduleDetection": "force",
     "skipLibCheck": true,
+    "paths": {
+      "@/*": ["./src/*"],
+      // Nesse caso o "@" seria um "apelido para a pasta "src"
+      "@env/*": ["./src/env/*"],
+    }
   }
 }
