@@ -23,6 +23,7 @@ model User {
   publicID String @unique @default(uuid(7)) @map("public_id")
   name String
   username String @unique
+  email String @unique
   passwordHash String @map("password_hash")
   seats Seat[]
   role USER_ROLE @default(DEFAULT)
