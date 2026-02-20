@@ -7,8 +7,8 @@ import { update } from "./update-user.controller.js";
 
 export async function usersRoutes(app:FastifyInstance) {
     app.post('/', register)
+    app.get('/', list)
     app.get('/:publicID', get)
-    app.get('/:publicID', list)
     app.delete('/:publicID', deleteUser)
     app.patch('/:publicID', update)
 }
