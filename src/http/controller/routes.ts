@@ -5,4 +5,5 @@ import { moviesRoutes } from "./movies/movie.routes.js";
 export async function appRoutes(app: FastifyInstance) {
     app.register(usersRoutes, {prefix: '/users'})
     app.register(moviesRoutes, {prefix: '/movies'})
+    app.register(moviesRoutes, {prefix: '/sessions'})
 }
