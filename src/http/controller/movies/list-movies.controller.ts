@@ -1,15 +1,32 @@
 import type { FastifyReply, FastifyRequest } from "fastify"
 import { MoviePresenter } from "../presenters/movie-presenter.js"
 import { makeListMoviesUseCase } from "@/use-cases/factories/make-list-movies.js"
+import z from "zod"
 
-export async function listMovies(_request: FastifyRequest, reply: FastifyReply) {
-    try {
-        const listMoviesUseCase = makeListMoviesUseCase()
+export async function listMovies(
+    _request: FastifyRequest, 
+    reply: FastifyReply
+) {
+    
+    const listMoviesQuerySchema = z.object({
+        title: z.string().optional(),
+        page: z.number().optional(),
+        limit: z.number().optional(),
+    })
 
-        const { movies } = await listMoviesUseCase.execute()
-        
-        return reply.status(200).send(MoviePresenter.toHTTP(movies))
-    } catch (error) {
-        throw error
-    }
+    const { title, page, limit } = listMoviesQuerySchema.parse(_request.query)
+    const listMoviesUseCase = makeListMoviesUseCase()
+
+    const { movies, totalCount, totalPages, currentPage } = await listMoviesUseCase.execute({ title, page, limit })
+    
+    return reply
+    .status(200)
+    .send({
+        movies: MoviePresenter.toHTTP(movies),
+        totalCount,
+        totalPages,
+        currentPage,
+    })
+
+
 }
