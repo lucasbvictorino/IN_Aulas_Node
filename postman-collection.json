@@ -33,6 +33,23 @@
         },
         {
           "name": "Autenticar Usuário",
+          "event": [
+            {
+              "listen": "test",
+              "script": {
+                "exec": [
+                  "if (pm.response.code === 200) {",
+                  "  const responseData = pm.response.json();",
+                  "  if (responseData.token) {",
+                  "    pm.environment.set('token', responseData.token);",
+                  "    console.log('Token saved:', responseData.token);",
+                  "  }",
+                  "}"
+                ],
+                "type": "text/javascript"
+              }
+            }
+          ],
           "request": {
             "method": "POST",
             "header": [
@@ -43,14 +60,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"login\": \"joao_silva\",\n  \"password\": \"senha123456\"\n}"
+              "raw": "{\n  \"login\": \"admin\",\n  \"password\": \"12345678\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/users/authenticate",
               "host": ["{{baseUrl}}"],
               "path": ["users", "authenticate"]
             },
-            "description": "Autentica um usuário com username/email e senha."
+            "description": "Autentica um usuário com username/email e senha. Use admin/12345678 para testar com o usuário padrão do seeder."
           },
           "response": []
         },
@@ -58,13 +75,20 @@
           "name": "Listar Todos os Usuários",
           "request": {
             "method": "GET",
-            "header": [],
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "Token JWT obtido na autenticação"
+              }
+            ],
             "url": {
               "raw": "{{baseUrl}}/users",
               "host": ["{{baseUrl}}"],
               "path": ["users"]
             },
-            "description": "Retorna a lista de todos os usuários cadastrados."
+            "description": "Retorna a lista de todos os usuários cadastrados. Requer autenticação com credenciais de ADMIN."
           },
           "response": []
         },
@@ -321,6 +345,12 @@
       "key": "baseUrl",
       "value": "http://localhost:3333",
       "type": "string"
+    },
+    {
+      "key": "token",
+      "value": "",
+      "type": "string",
+      "description": "JWT token obtido ao autenticar um usuário"
     },
     {
       "key": "userId",
