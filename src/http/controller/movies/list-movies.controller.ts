@@ -10,8 +10,8 @@ export async function listMovies(
     
     const listMoviesQuerySchema = z.object({
         title: z.string().optional(),
-        page: z.number().optional(),
-        limit: z.number().optional(),
+        page: z.coerce.number().optional(),
+        limit: z.coerce.number().optional(),
     })
 
     const { title, page, limit } = listMoviesQuerySchema.parse(_request.query)

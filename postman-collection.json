@@ -38,7 +38,7 @@
               "listen": "test",
               "script": {
                 "exec": [
-                  "if (pm.response.code === 200) {",
+                  "if (pm.response.code === 201) {",
                   "  const responseData = pm.response.json();",
                   "  if (responseData.token) {",
                   "    pm.environment.set('token', responseData.token);",
@@ -60,14 +60,14 @@
             ],
             "body": {
               "mode": "raw",
-              "raw": "{\n  \"login\": \"admin\",\n  \"password\": \"12345678\"\n}"
+              "raw": "{\n  \"username\": \"admin\",\n  \"password\": \"12345678\"\n}"
             },
             "url": {
               "raw": "{{baseUrl}}/users/authenticate",
               "host": ["{{baseUrl}}"],
               "path": ["users", "authenticate"]
             },
-            "description": "Autentica um usuário com username/email e senha. Use admin/12345678 para testar com o usuário padrão do seeder."
+            "description": "Autentica um usuário com username ou email e senha. Use username: admin / password: 12345678 para testar com o usuário padrão do seeder."
           },
           "response": []
         },
@@ -140,6 +140,77 @@
               "path": ["users", "{{userId}}"]
             },
             "description": "Deleta um usuário específico. Substitua {{userId}} pelo ID do usuário."
+          },
+          "response": []
+        },
+        {
+          "name": "Obter Perfil do Usuário",
+          "request": {
+            "method": "GET",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "Token JWT obtido na autenticação"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Retorna os dados do perfil do usuário autenticado. Requer autenticação com JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "Atualizar Perfil do Usuário",
+          "request": {
+            "method": "PATCH",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "Token JWT obtido na autenticação"
+              },
+              {
+                "key": "Content-Type",
+                "value": "application/json"
+              }
+            ],
+            "body": {
+              "mode": "raw",
+              "raw": "{\n  \"name\": \"João Silva Atualizado\",\n  \"username\": \"joao_silva_novo\",\n  \"email\": \"joao_novo@example.com\"\n}"
+            },
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Atualiza os dados do perfil do usuário autenticado. Todos os campos são opcionais. Requer autenticação com JWT."
+          },
+          "response": []
+        },
+        {
+          "name": "Deletar Perfil do Usuário",
+          "request": {
+            "method": "DELETE",
+            "header": [
+              {
+                "key": "Authorization",
+                "value": "Bearer {{token}}",
+                "type": "text",
+                "description": "Token JWT obtido na autenticação"
+              }
+            ],
+            "url": {
+              "raw": "{{baseUrl}}/users/me",
+              "host": ["{{baseUrl}}"],
+              "path": ["users", "me"]
+            },
+            "description": "Deleta o perfil do usuário autenticado. Requer autenticação com JWT."
           },
           "response": []
         }
